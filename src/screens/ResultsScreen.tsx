@@ -16,6 +16,10 @@ interface ResultsScreenProps {
 }
 
 export default function ResultsScreen({ navigation, route }: ResultsScreenProps) {
+  //var viewLoaded = false;
+  //var viewLoadedTime: any
+  var timeToContactSpan: any;
+
   const { filters } = route.params;
 
   const filteredProviders = careProviders.filter(provider =>
@@ -23,6 +27,7 @@ export default function ResultsScreen({ navigation, route }: ResultsScreenProps)
   );
 
   const handleContactProvider = (provider: CareProvider) => {
+    timeToContactSpan.end();
     navigation.navigate('Chat', { provider });
   };
 
@@ -33,8 +38,21 @@ export default function ResultsScreen({ navigation, route }: ResultsScreenProps)
     />
   );
 
+  const whenViewLoaded = () => {
+    //viewLoaded = true;
+    //viewLoadedTime = Date.now();
+    timeToContactSpan = Sentry.startInactiveSpan({
+      name: 'time_to_contact_provider',
+      op: 'task',
+      parentSpan: null,
+    });
+  };
+
+  setTimeout(() => {},
+    (Math.floor(Math.random() * (150 - 50 + 1)) + 50));
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={whenViewLoaded}>
       <View style={styles.header}>
         <Text style={styles.title}>
           {filteredProviders.length} providers found
