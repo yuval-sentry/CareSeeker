@@ -77,6 +77,7 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
     setMessages(prev => [...prev, userMessage]);
     setNewMessage('');
 
+    timeToTypeMessageSpan.setAttribute('message_sent', 1);
     timeToTypeMessageSpan.end();
     hasInteracted = false;
 
