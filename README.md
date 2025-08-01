@@ -1,103 +1,169 @@
 # CareSeeker
 
-A React Native marketplace app for finding care providers, inspired by Care.com. This app focuses on the buyer side, allowing users to search for and connect with various types of care providers.
+A React Native mobile application for connecting users with care providers. Built with Expo and TypeScript.
 
 ## Features
 
-- **Search Screen**: Browse different types of care services (babysitting, dog walking, tutoring, housekeeping, senior care, pet sitting)
-- **Provider Results**: View filtered results with provider details, ratings, and pricing
-- **Chat System**: Communicate with providers through an in-app chat interface
-- **Booking**: Book services directly through the chat interface
+- **Welcome Screen**: Introduction to the app
+- **Search Screen**: Find care providers by location and care type
+- **Results Screen**: Browse available care providers
+- **Chat Screen**: Message providers directly
+- **Sentry Integration**: Performance monitoring and error tracking
 
-## Care Types Available
+## Prerequisites
 
-- 👶 Babysitter
-- 🐕 Dog Walker
-- 📚 Tutoring
-- 🏠 Housekeeping
-- 👴 Senior Care
-- 🐱 Pet Sitting
+Before running this app, make sure you have the following installed:
 
-## Getting Started
+- **Node.js** (version 18 or higher)
+- **npm** or **yarn**
+- **Expo CLI** (`npm install -g @expo/cli`)
+- **Expo Go** app on your mobile device (for testing)
 
-### Prerequisites
+## Installation
 
-- Node.js (v14 or higher)
-- npm or yarn
-- Expo CLI
-- iOS Simulator (for iOS) or Android Emulator (for Android)
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd CareSeeker
+   ```
 
-### Installation
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd CareSeeker
-```
+3. **Install Expo CLI globally** (if not already installed)
+   ```bash
+   npm install -g @expo/cli
+   ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+## Running the App
 
-3. Start the development server:
-```bash
-npm start
-```
+### Development Mode
 
-4. Run on your preferred platform:
-```bash
-# For iOS
-npm run ios
+1. **Start the development server**
+   ```bash
+   npm start
+   # or
+   yarn start
+   # or
+   expo start
+   ```
 
-# For Android
-npm run android
+2. **Choose your platform:**
+   - **iOS Simulator**: Press `i` in the terminal or scan the QR code with Expo Go
+   - **Android Emulator**: Press `a` in the terminal or scan the QR code with Expo Go
+   - **Physical Device**: Scan the QR code with the Expo Go app
 
-# For web
-npm run web
-```
+### Platform-Specific Commands
+
+- **iOS**: `npm run ios` or `expo start --ios`
+- **Android**: `npm run android` or `expo start --android`
+- **Web**: `npm run web` or `expo start --web`
 
 ## Project Structure
 
 ```
-src/
-├── screens/
-│   ├── SearchScreen.tsx      # Main search interface
-│   ├── ResultsScreen.tsx     # Provider results list
-│   └── ChatScreen.tsx        # Chat interface
-├── components/               # Reusable components
-├── types/
-│   └── index.ts             # TypeScript type definitions
-└── data/
-    └── dummyData.ts         # Mock data for providers and care types
+CareSeeker/
+├── App.tsx                 # Main app component with navigation
+├── src/
+│   ├── components/         # Reusable UI components
+│   │   ├── CustomButton.tsx
+│   │   └── ProviderCard.tsx
+│   ├── screens/           # App screens
+│   │   ├── WelcomeScreen.tsx
+│   │   ├── SearchScreen.tsx
+│   │   ├── ResultsScreen.tsx
+│   │   └── ChatScreen.tsx
+│   ├── data/             # Static data and dummy data
+│   │   └── dummyData.ts
+│   └── types/            # TypeScript type definitions
+│       └── index.ts
+├── assets/               # Images and static assets
+└── package.json
 ```
 
-## Technologies Used
+## Key Dependencies
 
-- React Native
-- Expo
-- TypeScript
-- React Navigation
-- React Native Vector Icons
+- **Expo**: React Native development platform
+- **React Navigation**: Navigation between screens
+- **Sentry**: Error tracking and performance monitoring
+- **TypeScript**: Type safety and better development experience
 
-## Screenshots
+## Configuration
 
-The app includes three main screens:
+### Sentry Setup
 
-1. **Search Screen**: Select care type, dates, and location
-2. **Results Screen**: Browse available providers with ratings and pricing
-3. **Chat Screen**: Communicate with providers and book services
+The app includes Sentry integration for error tracking and performance monitoring. The DSN is configured in `App.tsx`. To use your own Sentry project:
 
-## Future Enhancements
+1. Create a Sentry project
+2. Replace the DSN in `App.tsx` with your project's DSN
+3. Configure additional Sentry options as needed
 
-- User authentication and profiles
-- Real-time messaging
-- Payment integration
-- Provider verification system
-- Review and rating system
-- Push notifications
-- Location-based search
-- Advanced filtering options
+## Development Tips
+
+- Use **Expo Go** for quick testing on physical devices
+- Enable **Hot Reloading** for faster development
+- Check the **Expo DevTools** in your browser for debugging
+- Use **TypeScript** for better code quality and IDE support
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Metro bundler issues**
+   ```bash
+   npm start -- --clear
+   ```
+
+2. **Expo CLI not found**
+   ```bash
+   npm install -g @expo/cli
+   ```
+
+3. **Dependencies issues**
+   ```bash
+   rm -rf node_modules
+   npm install
+   ```
+
+4. **iOS Simulator not working**
+   - Make sure Xcode is installed
+   - Install iOS Simulator through Xcode
+
+5. **Android Emulator not working**
+   - Install Android Studio
+   - Set up Android Virtual Device (AVD)
+
+## Building for Production
+
+### Expo Build
+
+```bash
+# Build for iOS
+expo build:ios
+
+# Build for Android
+expo build:android
+```
+
+### EAS Build (Recommended)
+
+```bash
+# Install EAS CLI
+npm install -g @expo/eas-cli
+
+# Configure EAS
+eas build:configure
+
+# Build for iOS
+eas build --platform ios
+
+# Build for Android
+eas build --platform android
+```
 
 ## Contributing
 
@@ -110,3 +176,7 @@ The app includes three main screens:
 ## License
 
 This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please open an issue in the repository.
