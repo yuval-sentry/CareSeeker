@@ -20,6 +20,7 @@ interface ChatScreenProps {
 
 var hasInteracted = false;
 var timeToTypeMessageSpan: any;
+var timeToBookServiceSpan: any;
 
 export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const { provider } = route.params;
@@ -123,6 +124,8 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
         },
       ]
     );
+    timeToBookServiceSpan.setAttribute('service_booked', 1);
+    timeToBookServiceSpan.end();
   };
 
   const renderMessage = ({ item }: { item: ChatMessage }) => {
@@ -141,10 +144,19 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
     );
   };
 
+  const whenViewLoaded = () => {
+    timeToBookServiceSpan = Sentry.startInactiveSpan({
+      name: 'time_to_book_service',
+      op: 'task',
+      parentSpan: null,
+    });
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      onLayout={whenViewLoaded}
     >
       <FlatList
         ref={flatListRef}
