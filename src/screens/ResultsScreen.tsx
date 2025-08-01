@@ -27,6 +27,7 @@ export default function ResultsScreen({ navigation, route }: ResultsScreenProps)
   );
 
   const handleContactProvider = (provider: CareProvider) => {
+    timeToContactSpan.setAttribute('contact_clicks', 1);
     timeToContactSpan.end();
     navigation.navigate('Chat', { provider });
   };

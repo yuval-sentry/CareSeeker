@@ -11,11 +11,15 @@ import {
   Alert,
 } from 'react-native';
 import { CareProvider, ChatMessage } from '../types';
+import * as Sentry from '@sentry/react-native';
 
 interface ChatScreenProps {
   navigation: any;
   route: any;
 }
+
+var hasInteracted = false;
+var timeToTypeMessageSpan: any;
 
 export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   const { provider } = route.params;
@@ -31,6 +35,18 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
   ]);
   const [newMessage, setNewMessage] = useState('');
   const flatListRef = useRef<FlatList>(null);
+  
+
+  const handleFirstInteraction = () => {
+    if (!hasInteracted) {
+      timeToTypeMessageSpan = Sentry.startInactiveSpan({
+        name: 'time_to_type_message',
+        op: 'task',
+        parentSpan: null,
+      });
+      hasInteracted = true;
+    }
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -60,6 +76,9 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
 
     setMessages(prev => [...prev, userMessage]);
     setNewMessage('');
+
+    timeToTypeMessageSpan.end();
+    hasInteracted = false;
 
     // Simulate provider response
     setTimeout(() => {
@@ -142,6 +161,8 @@ export default function ChatScreen({ navigation, route }: ChatScreenProps) {
           style={styles.textInput}
           value={newMessage}
           onChangeText={setNewMessage}
+          onFocus={handleFirstInteraction}
+          onSelectionChange={handleFirstInteraction}
           placeholder="Type a message..."
           multiline
           maxLength={500}
