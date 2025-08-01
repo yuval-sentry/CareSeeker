@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react-native';
 import React, { useRef } from 'react';
 import {
   NavigationContainer,
-  NavigationContainerRef,
+  createNavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
@@ -13,7 +13,11 @@ import ResultsScreen from './src/screens/ResultsScreen';
 import ChatScreen from './src/screens/ChatScreen';
 
 // 👇 Create the navigation ref BEFORE Sentry.init
-var navigationRef = React.createRef<NavigationContainerRef<any>>();
+//var navigationRef = React.createRef<NavigationContainerRef<any>>();
+
+const navigationIntegration = Sentry.reactNavigationIntegration({
+      enableTimeToInitialDisplay: true,
+    });
 
 // ✅ Sentry configuration
 Sentry.init({
@@ -35,17 +39,21 @@ Sentry.init({
     Sentry.httpClientIntegration(),
 
     // 👇 Properly connect navigation ref for screen load tracking
-    Sentry.reactNavigationIntegration(),
+    navigationIntegration
   ],
   // spotlight: __DEV__, // Uncomment to enable Spotlight in dev
 });
 
 const Stack = createStackNavigator();
 
+
 export default Sentry.wrap(function App() {
+  const containerRef = createNavigationContainerRef();
   return (
     <Sentry.TouchEventBoundary>
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer ref={containerRef} onReady={() => {
+           navigationIntegration.registerNavigationContainer(containerRef);
+         }}>
         <StatusBar style="auto" />
         <Stack.Navigator
           initialRouteName="Welcome"
