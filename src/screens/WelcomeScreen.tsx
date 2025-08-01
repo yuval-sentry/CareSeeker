@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
+import * as Sentry from '@sentry/react-native';
 
 interface WelcomeScreenProps {
   navigation: any;
@@ -53,9 +54,9 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
           
           <TouchableOpacity
             style={styles.secondaryButton}
-            onPress={() => navigation.navigate('Search')}
+            onPress={() => Sentry.captureException(new Error('Test Error'))}
           >
-            <Text style={styles.secondaryButtonText}>Learn More</Text>
+            <Text style={styles.secondaryButtonText}>Test Error</Text>
           </TouchableOpacity>
         </View>
       </View>

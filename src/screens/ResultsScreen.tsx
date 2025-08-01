@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
+import * as Sentry from '@sentry/react-native';
 import { careProviders } from '../data/dummyData';
 import { CareProvider } from '../types';
 import ProviderCard from '../components/ProviderCard';

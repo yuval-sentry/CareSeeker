@@ -11,10 +11,15 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { careTypes } from '../data/dummyData';
 import { CareType, SearchFilters } from '../types';
+import * as Sentry from '@sentry/react-native';
 
 interface SearchScreenProps {
   navigation: any;
 }
+
+var formFillSpan: any;
+var formInteractionStarted = false;
+var searchStartTime: number | null = null;
 
 export default function SearchScreen({ navigation }: SearchScreenProps) {
   const [selectedCareType, setSelectedCareType] = useState<string>('');
@@ -22,7 +27,7 @@ export default function SearchScreen({ navigation }: SearchScreenProps) {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [location, setLocation] = useState<string>('');
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!selectedCareType || !location) {
       Alert.alert('Missing Information', 'Please fill in all fields');
       return;
@@ -34,10 +39,20 @@ export default function SearchScreen({ navigation }: SearchScreenProps) {
       location: location,
     };
 
-    navigation.navigate('Results', { filters });
+    try {
+      formFillSpan.end();
+    } catch (error) {
+      Alert.alert('Error', 'Error ending form fill span');
+      console.log('Error ending form fill span', error);
+      Sentry.captureException(error);
+    }
+
+    searchStartTime = Date.now();
+    navigation.navigate('Results', { filters, searchStartTime });
   };
 
   const onDateChange = (event: any, selectedDate?: Date) => {
+    hasFormInteractionStarted();
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setDate(selectedDate);
@@ -50,6 +65,21 @@ export default function SearchScreen({ navigation }: SearchScreenProps) {
       day: 'numeric',
       year: 'numeric',
     });
+  };
+
+  const hasFormInteractionStarted = () => {
+    if (!formInteractionStarted) {
+      formInteractionStarted = true;
+      formFillSpan = Sentry.startSpanManual({
+        name: 'search_form_filling_time',
+        op: 'task',
+      }, (span) => {return span;});
+    }
+  };
+
+  const handleCareTypeSelection = (careTypeName: string) => {
+    hasFormInteractionStarted();
+    setSelectedCareType(careTypeName);
   };
 
   return (
@@ -70,7 +100,7 @@ export default function SearchScreen({ navigation }: SearchScreenProps) {
                   styles.careTypeCard,
                   selectedCareType === careType.name && styles.selectedCard,
                 ]}
-                onPress={() => setSelectedCareType(careType.name)}
+                onPress={() => handleCareTypeSelection(careType.name)}
               >
                 <Text style={styles.careTypeIcon}>{careType.icon}</Text>
                 <Text style={styles.careTypeName}>{careType.name}</Text>
